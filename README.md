@@ -1,90 +1,174 @@
-India AQI Analysis Dashboard
-Real-Time Air Quality Index (AQI) Analysis & Forecasting Web Application
+🌏 India AQI Analysis Dashboard
+Real-Time Air Quality Monitoring, Analytics & Forecasting (2010–2025)
 
-🚀 Project Description
-A full-stack data science web app for analyzing, visualizing, and forecasting Air Quality Index (AQI) across Indian cities and states (2010–2025, including real-time updates).
-Built with Python (FastAPI) backend and React frontend, it allows users to:
+A Full-Stack Data Science Web Application
 
-Select cities and year(s) to analyze
+<p align="center"> <img src="https://img.shields.io/badge/FastAPI-API%20Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white"/> <img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/Python-Data%20Science-3776AB?style=for-the-badge&logo=python&logoColor=white"/> <img src="https://img.shields.io/badge/ARIMA-Forecasting-5C2D91?style=for-the-badge"/> </p>
+🌟 Overview
 
-View summary statistics, variability metrics, box plots, violin plots, histograms, and more
+The India AQI Analysis Dashboard is a powerful analytics platform built to study, visualize, and forecast Air Quality Index (AQI) levels across Indian cities from 2010–2025, including optional real-time API updates.
 
-See pollutant correlations (correlation matrices and heatmaps)
-
-Forecast future AQI values using AI models (ARIMA time series)
-
-Get health impact insights based on AQI categories
-
-💡 Key Features
-CSV Import + API Integration: Ready to analyze datasets from Dataful, Govt OGD portal, or live government APIs
-
-Summary Analytics: Mean, median, std dev, quartiles, IQR, correlation
-
-Rich Visualizations: Box plot, violin plot, histogram, density plot, scatter, correlation matrix, geographic/hexbin plots
-
-Prediction Engine: ARIMA model for multi-month/year AQI forecasting with confidence intervals
-
-Health Insights: Dashboard summarizes good/bad AQI with actionable advice
-
-Modern UI: Clean and interactive React frontend
-
-📦 Tech Stack
-Backend: Python, FastAPI, pandas, statsmodels, seaborn, matplotlib
-
-Frontend: React.js, axios, recharts, react-select
-
-Data: CSV files (Dataful, CPCB, OGD), or direct API fetch (Data.gov.in API key)
-
-Deployment: Docker (optional), Render.com / Railway / Google Cloud Run
+Built with a Python FastAPI backend and a React.js frontend, the dashboard combines statistical analysis, data visualization, and machine learning forecasting into one clean, interactive interface.
 
 
-⚙️ Local Installation & Setup
-Clone the project
+README
 
-bash
+🚀 Key Features
+📥 Data Import Options
+
+Upload CSV from Dataful, CPCB, OGD
+
+Real-time data from Data.gov.in API
+(requires API key)
+
+📊 Comprehensive Statistics
+
+Mean, median, quartiles
+
+Standard deviation, IQR
+
+Trend & variability analysis
+
+📈 Beautiful Visualizations
+
+Box plots / Violin plots
+
+Correlation matrix & Heatmap
+
+Histograms / Density plots
+
+Scatter plots
+
+Geographic plots / Hexbin maps
+
+🤖 AI Forecasting Engine
+
+ARIMA time-series forecasting
+
+Predict up to N months / full year
+
+Confidence interval support
+
+🩺 Health Insights Panel
+
+AQI category classification
+
+Health risk level interpretation
+
+Safety recommendations
+
+🧰 Tech Stack
+
+Backend: FastAPI, Pandas, Statsmodels, Seaborn, Matplotlib
+
+Frontend: React.js, Axios, Recharts, React-Select
+
+Deployment: Render / Railway / GCR
+
+Optional: Docker support
+
+
+README
+
+🛠️ Installation & Setup
+📦 1. Clone the Repository
 git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 cd YOUR_REPO_NAME
-Setup Python environment
 
-bash
+🐍 Backend Setup (FastAPI)
+🔧 2. Create Python Environment
 conda create -n aqi_project python=3.10
 conda activate aqi_project
+
+📁 3. Install Dependencies
 cd backend
 pip install -r requirements.txt
-Configure .env
 
-Create a .env file in /backend/:
+🔑 4. Add Environment Variables
 
-text
+Create /backend/.env:
+
 DATA_GOV_API_KEY=your_api_key_here
 DEBUG=True
-Prepare AQI dataset
 
-Option 1: Download from Dataful and save as /backend/data/aqi_data.csv
+📊 5. Add Dataset
 
-Option 2: Use data_collector.py to fetch live data
+Choose one:
 
-Option 3: Use public government CSV (see README links)
+Download CSV → save to /backend/data/aqi_data.csv
 
-Run FastAPI backend
+OR run data_collector.py
 
-bash
+
+README
+
+▶️ 6. Run Backend
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
-Setup React frontend
 
-bash
+💻 Frontend Setup (React)
+📦 7. Install Dependencies
 cd ../frontend
 npm install
+
+▶️ 8. Run Frontend
 npm start
-The app should be live at http://localhost:3000
 
-🎯 Key Usage Steps
-Open the app in your browser.
 
-Select city/cities and year.
+App runs at: http://localhost:3000
 
-(Optional) Choose a prediction period (“Next N months” or “Next year”).
+Backend runs at: http://localhost:8000
 
-Click “Run Analysis”.
 
-View visualizations, summary stats, AQI health assessment, and predictions.
+
+README
+
+🎯 How to Use
+
+Select city/cities
+
+Choose analysis year range
+
+(Optional) Select prediction horizon
+
+Click Run Analysis
+
+View:
+
+Summary statistics
+
+Visualizations
+
+Correlation matrix
+
+AQI health assessment
+
+Forecast graphs
+
+
+README
+
+📸 Screenshots
+
+(Add your dashboard screenshots here)
+
+![Dashboard Screenshot](./images/dashboard.png)
+
+🧠 Future Enhancements
+
+LSTM/Prophet forecasting
+
+Mobile-friendly UI overhaul
+
+Automated daily AQI ingestion
+
+Interactive AQI heatmap
+
+Pollutant breakdown analytics
+
+🤝 Contributing
+
+Pull requests and suggestions are welcome!
+
+📄 License
+
+MIT License © 2025
