@@ -152,7 +152,10 @@ README
 
 (Add your dashboard screenshots here)
 
-![Dashboard Screenshot](./images/dashboard.png)
+<img width="1894" height="877" alt="image" src="https://github.com/user-attachments/assets/5475839b-468f-4acf-a98e-e1b659f63d76" />
+<img width="601" height="1061" alt="image" src="https://github.com/user-attachments/assets/f736fb4c-60ef-461e-929e-953a2a5dbd55" />
+<img width="596" height="1036" alt="image" src="https://github.com/user-attachments/assets/23acc5df-6330-438f-b757-6ccaeb6fac71" />
+
 
 🧠 Future Enhancements
 
