@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import './App.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+
 function App() {
   const [cities, setCities] = useState([]);
   const [selectedCities, setSelectedCities] = useState([]);
@@ -18,7 +20,7 @@ function App() {
 
   useEffect(() => {
     // Fetch available cities from backend
-    axios.get('http://localhost:8000/api/cities')
+    axios.get('${API_BASE_URL}/api/cities')
       .then(res => {
         const cityOptions = res.data.cities.map(city => ({
           value: city,
@@ -56,7 +58,7 @@ function App() {
 
       console.log('Sending request:', payload); // Debug log
 
-      const response = await axios.post('http://localhost:8000/api/analyze', payload, {
+      const response = await axios.post('${API_BASE_URL}/api/analyze', payload, {
         headers: {
           'Content-Type': 'application/json',
         },
