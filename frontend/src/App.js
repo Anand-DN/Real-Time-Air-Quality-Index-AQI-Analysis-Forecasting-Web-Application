@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     // Fetch available cities from backend
-    axios.get('${API_BASE_URL}/api/cities')
+    axios.get(`${API_BASE_URL}/api/cities`)
       .then(res => {
         const cityOptions = res.data.cities.map(city => ({
           value: city,
@@ -58,7 +58,7 @@ function App() {
 
       console.log('Sending request:', payload); // Debug log
 
-      const response = await axios.post('${API_BASE_URL}/api/analyze', payload, {
+      const response = await axios.post(`${API_BASE_URL}/api/analyze`, payload, {
         headers: {
           'Content-Type': 'application/json',
         },
