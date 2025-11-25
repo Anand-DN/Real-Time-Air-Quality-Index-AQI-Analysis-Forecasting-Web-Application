@@ -72,7 +72,8 @@ README
 
 🛠️ Installation & Setup
 📦 1. Clone the Repository
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+
+git clone https://github.com/Anand-DN/Real-Time-Air-Quality-Index-AQI-Analysis-Forecasting-Web-Application.git
 cd YOUR_REPO_NAME
 
 🐍 Backend Setup (FastAPI)
