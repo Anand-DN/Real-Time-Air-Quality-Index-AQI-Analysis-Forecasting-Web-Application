@@ -1,70 +1,90 @@
-# Getting Started with Create React App
+India AQI Analysis Dashboard
+Real-Time Air Quality Index (AQI) Analysis & Forecasting Web Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🚀 Project Description
+A full-stack data science web app for analyzing, visualizing, and forecasting Air Quality Index (AQI) across Indian cities and states (2010–2025, including real-time updates).
+Built with Python (FastAPI) backend and React frontend, it allows users to:
 
-## Available Scripts
+Select cities and year(s) to analyze
 
-In the project directory, you can run:
+View summary statistics, variability metrics, box plots, violin plots, histograms, and more
 
-### `npm start`
+See pollutant correlations (correlation matrices and heatmaps)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Forecast future AQI values using AI models (ARIMA time series)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Get health impact insights based on AQI categories
 
-### `npm test`
+💡 Key Features
+CSV Import + API Integration: Ready to analyze datasets from Dataful, Govt OGD portal, or live government APIs
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Summary Analytics: Mean, median, std dev, quartiles, IQR, correlation
 
-### `npm run build`
+Rich Visualizations: Box plot, violin plot, histogram, density plot, scatter, correlation matrix, geographic/hexbin plots
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Prediction Engine: ARIMA model for multi-month/year AQI forecasting with confidence intervals
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Health Insights: Dashboard summarizes good/bad AQI with actionable advice
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Modern UI: Clean and interactive React frontend
 
-### `npm run eject`
+📦 Tech Stack
+Backend: Python, FastAPI, pandas, statsmodels, seaborn, matplotlib
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Frontend: React.js, axios, recharts, react-select
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Data: CSV files (Dataful, CPCB, OGD), or direct API fetch (Data.gov.in API key)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Deployment: Docker (optional), Render.com / Railway / Google Cloud Run
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+⚙️ Local Installation & Setup
+Clone the project
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+cd YOUR_REPO_NAME
+Setup Python environment
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+bash
+conda create -n aqi_project python=3.10
+conda activate aqi_project
+cd backend
+pip install -r requirements.txt
+Configure .env
 
-### Code Splitting
+Create a .env file in /backend/:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+text
+DATA_GOV_API_KEY=your_api_key_here
+DEBUG=True
+Prepare AQI dataset
 
-### Analyzing the Bundle Size
+Option 1: Download from Dataful and save as /backend/data/aqi_data.csv
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Option 2: Use data_collector.py to fetch live data
 
-### Making a Progressive Web App
+Option 3: Use public government CSV (see README links)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Run FastAPI backend
 
-### Advanced Configuration
+bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+Setup React frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+bash
+cd ../frontend
+npm install
+npm start
+The app should be live at http://localhost:3000
 
-### Deployment
+🎯 Key Usage Steps
+Open the app in your browser.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Select city/cities and year.
 
-### `npm run build` fails to minify
+(Optional) Choose a prediction period (“Next N months” or “Next year”).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Click “Run Analysis”.
+
+View visualizations, summary stats, AQI health assessment, and predictions.
