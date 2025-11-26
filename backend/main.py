@@ -87,16 +87,24 @@ async def get_cities():
 async def run_analysis(request: AnalysisRequest):
     try:
         data = load_aqi_data(request.cities, request.year)
-        print(f"✓ Loaded {len(data)} records for analysis ({request.cities}, {request.year})")
+        
+        print(f"✓ Loaded {len(data)} records")
+        print(f"📊 Prediction request: months={request.predict_months}, year={request.predict_year}")
+        
         predictions = None
         if request.predict_months or request.predict_year:
-            print(f"📊 Prediction requested: months={request.predict_months}, year={request.predict_year}")
+            print("🔮 Generating predictions...")
             predictions = generate_predictions(
-                data, 
+                data,
                 predict_months=request.predict_months,
                 predict_year=request.predict_year
             )
-            print(f"Predictions result: {type(predictions)} | Values: {predictions.get('forecasted_values') if predictions else 'None'}")
+            print(f"✓ Predictions result: {type(predictions)}")
+            if predictions:
+                print(f"   Forecast values: {len(predictions.get('forecasted_values', []))} periods")
+        
+        # ... rest of code
+
         else:
             print("No prediction requested.")
 
@@ -285,29 +293,44 @@ def generate_predictions(df, predict_months=None, predict_year=None):
         from statsmodels.tsa.arima.model import ARIMA
         from statsmodels.tsa.stattools import adfuller
         
+        print(f"🔮 Starting prediction: months={predict_months}, year={predict_year}")
+        
         # Determine value and date columns
         value_col = 'aqi' if 'aqi' in df.columns else 'value'
         date_col = 'timestamp' if 'timestamp' in df.columns else 'date'
         
+        print(f"   Using columns: date={date_col}, value={value_col}")
+        
         if date_col not in df.columns:
-            return None
+            print(f"   ❌ Date column '{date_col}' not found in dataframe")
+            return {
+                "error": f"Date column '{date_col}' not found",
+                "forecasted_values": [],
+                "dates": []
+            }
         
         # Prepare time series data
         ts_df = df[[date_col, value_col]].copy()
-        ts_df[date_col] = pd.to_datetime(ts_df[date_col])
+        ts_df[date_col] = pd.to_datetime(ts_df[date_col], errors='coerce')
+        ts_df = ts_df.dropna(subset=[date_col, value_col])  # Remove invalid dates/values
         ts_df = ts_df.sort_values(date_col)
+        
+        print(f"   Initial time series length: {len(ts_df)} points")
         
         # Aggregate by date (average if multiple records per day)
         ts_df = ts_df.groupby(date_col)[value_col].mean().reset_index()
         ts_df.set_index(date_col, inplace=True)
         
+        print(f"   After aggregation: {len(ts_df)} unique dates")
+        
         if len(ts_df) < 10:
+            print(f"   ❌ Insufficient data: {len(ts_df)} points (need 10+)")
             return {
-                "error": "Insufficient data for forecasting (minimum 10 data points required)",
+                "error": f"Insufficient data for forecasting ({len(ts_df)} points, minimum 10 required)",
                 "forecasted_values": [],
                 "dates": []
             }
-        Fdef
+        
         # Determine forecast periods
         if predict_year:
             periods = 12  # 12 months for yearly prediction
@@ -316,15 +339,23 @@ def generate_predictions(df, predict_months=None, predict_year=None):
         else:
             periods = 6  # Default to 6 months
         
+        print(f"   Forecasting {periods} periods")
+        
         # Check stationarity
         adf_test = adfuller(ts_df[value_col].dropna())
         is_stationary = adf_test[1] < 0.05
+        print(f"   Stationarity test: {'Stationary' if is_stationary else 'Non-stationary'} (p-value: {adf_test[1]:.4f})")
         
         # Fit ARIMA model
-        # Using auto-selected parameters (1,1,1) as a reasonable default
         try:
-            model = ARIMA(ts_df[value_col], order=(1, 1 if not is_stationary else 0, 1))
+            # Use (1,1,1) for non-stationary, (1,0,1) for stationary
+            order = (1, 1 if not is_stationary else 0, 1)
+            print(f"   Fitting ARIMA{order}...")
+            
+            model = ARIMA(ts_df[value_col], order=order)
             fitted = model.fit()
+            
+            print(f"   ✓ ARIMA fitted successfully (AIC: {fitted.aic:.2f})")
             
             # Generate forecast
             forecast = fitted.forecast(steps=periods)
@@ -338,10 +369,10 @@ def generate_predictions(df, predict_months=None, predict_year=None):
             )
             
             # Get confidence intervals
-            forecast_df = fitted.get_forecast(steps=periods)
-            conf_int = forecast_df.conf_int()
+            forecast_obj = fitted.get_forecast(steps=periods)
+            conf_int = forecast_obj.conf_int()
             
-            return {
+            result = {
                 "forecasted_values": [float(v) for v in forecast.tolist()],
                 "dates": [str(d.strftime('%Y-%m-%d')) for d in future_dates],
                 "confidence_intervals": {
@@ -349,6 +380,7 @@ def generate_predictions(df, predict_months=None, predict_year=None):
                     "upper": [float(x) for x in conf_int.iloc[:, 1].tolist()]
                 },
                 "model_info": {
+                    "method": "ARIMA Time Series",
                     "aic": float(fitted.aic),
                     "bic": float(fitted.bic),
                     "is_stationary": bool(is_stationary)
@@ -357,8 +389,14 @@ def generate_predictions(df, predict_months=None, predict_year=None):
                 "forecast_period": "year" if predict_year else f"{periods} months"
             }
             
+            print(f"   ✓ Generated {len(result['forecasted_values'])} forecast values")
+            print(f"   Sample forecast: {result['forecasted_values'][:3]}...")
+            
+            return result
+            
         except Exception as e:
-            print(f"ARIMA fitting error: {e}")
+            print(f"   ⚠️ ARIMA fitting error: {e}")
+            print(f"   Falling back to Moving Average method...")
             
             # Fallback: Simple moving average prediction
             window = min(7, len(ts_df) // 2)
@@ -372,25 +410,45 @@ def generate_predictions(df, predict_months=None, predict_year=None):
             )
             
             # Simple forecast with slight trend
-            trend = (ts_df[value_col].iloc[-1] - ts_df[value_col].iloc[-window]) / window
-            forecasted = [last_ma + (i * trend) for i in range(1, periods + 1)]
+            if len(ts_df) >= window:
+                trend = (ts_df[value_col].iloc[-1] - ts_df[value_col].iloc[-window]) / window
+            else:
+                trend = 0
             
-            return {
+            forecasted = [float(last_ma + (i * trend)) for i in range(1, periods + 1)]
+            
+            # Generate simple confidence intervals (±10%)
+            ci_lower = [v * 0.9 for v in forecasted]
+            ci_upper = [v * 1.1 for v in forecasted]
+            
+            result = {
                 "forecasted_values": forecasted,
                 "dates": [d.strftime('%Y-%m-%d') for d in future_dates],
+                "confidence_intervals": {
+                    "lower": ci_lower,
+                    "upper": ci_upper
+                },
                 "model_info": {
-                    "method": "Moving Average",
+                    "method": "Moving Average (Fallback)",
                     "window": window
                 },
                 "current_aqi": float(ts_df[value_col].iloc[-1]),
                 "forecast_period": "year" if predict_year else f"{periods} months"
             }
+            
+            print(f"   ✓ Fallback forecast generated: {len(result['forecasted_values'])} values")
+            
+            return result
     
     except Exception as e:
-        print(f"Prediction error: {e}")
+        print(f"❌ Prediction error: {e}")
         import traceback
         traceback.print_exc()
-        return None
+        return {
+            "error": f"Prediction failed: {str(e)}",
+            "forecasted_values": [],
+            "dates": []
+        }
 
 
 
