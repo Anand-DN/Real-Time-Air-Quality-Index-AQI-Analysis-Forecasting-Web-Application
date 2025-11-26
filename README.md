@@ -9,7 +9,9 @@ A Full-Stack Data Science Web Application
 The India AQI Analysis Dashboard is a powerful analytics platform built to study, visualize, and forecast Air Quality Index (AQI) levels across Indian cities from 2010–2025, including optional real-time API updates.
 
 Built with a Python FastAPI backend and a React.js frontend, the dashboard combines statistical analysis, data visualization, and machine learning forecasting into one clean, interactive interface.
-
+ 
+ 
+⭐ ⭐⭐ Check out 👉 : https://real-time-air-quality-index-aqi-analysis-obgu.onrender.com  ⭐⭐⭐
 
 README
 
