@@ -129,17 +129,21 @@ function App() {
             <option value="year">Next Year</option>
           </select>
 
-          {predictOption === 'months' && (
-            <input
-              type="number"
-              min="1"
-              max="24"
-              value={predictValue || 6}
-              onChange={(e) => setPredictValue(parseInt(e.target.value) || 6)}
-              placeholder="Number of months"
-              style={{ marginTop: '10px' }}
-            />
-          )}
+{predictOption === 'months' && (
+  <input
+    type="number"
+    min="1"
+    max="24"
+    value={predictValue === null ? '' : predictValue}
+    onChange={(e) => {
+      const val = e.target.value;
+      setPredictValue(val === '' ? null : parseInt(val));
+    }}
+    placeholder="Number of months"
+    style={{ marginTop: '10px' }}
+  />
+)}
+
         </div>
 
         <button
